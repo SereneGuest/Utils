@@ -162,6 +162,25 @@ string getOutFileName(string path, string oriFile, const char* suffix)
     return path;
 }
 
+/* Conver yv12 to nv21 */
+void convertYV12ToNV21(int width, int height, char* src, char* dst)
+{
+    int ySize = width * height;
+    int uSize, vSize;
+    uSize = vSize = ySize / 4;
+    // copy y buffer
+    memcpy(dst, src, ySize);
+    int uHeight = height / 4;
+    for (int i = 0; i < uSize; i = i + 2) {
+        // u
+        *(dst + ySize + i) = *(src + ySize + i / 2);
+        *(dst + ySize + uSize + i) = *(src + ySize + uSize / 2 + i / 2);
+        // v
+        *(dst + ySize + i + 1) = *(src + ySize + uSize + i / 2);
+        *(dst + ySize + uSize + i + 1) = *(src + ySize + uSize + uSize / 2 + i / 2);
+    }
+}
+
 /* Convert yuv file to jpeg file */
 void yuv2Jpeg(cmdline::parser &cmdParser, string file, ColorConversionCodes code)
 {
@@ -201,14 +220,76 @@ void yuv2Jpeg(cmdline::parser &cmdParser, string file, ColorConversionCodes code
     delete [] data;
 }
 
+/* Convert jpeg to yuv, only support yv12 and i420 */
 void jpeg2Yuv(cmdline::parser &cmdParser, string file, ColorConversionCodes code)
 {
-    cout << "jpeg2Yuv:" << code << endl;
+    // get relative cmd parameters
+    int width = cmdParser.get<int>("width");
+    int height = cmdParser.get<int>("height");
+    int flipType = cmdParser.get<int>("flip");
+    int rotation = cmdParser.get<int>("rotation");
+    string outPath = cmdParser.get<string>("output");
+    // create Mat
+    Mat bgrMat = cv::imread(file, IMREAD_COLOR);
+    // flip and rotate
+    performRotateAndFlip(bgrMat, flipType, rotation);
+    Mat cropMat = bgrMat;
+    // if width and height is set, crop mat base on width and height
+    if (width != 0 && height != 0) {
+        cropMat = bgrMat(cv::Rect(0, 0, width, height));
+    }
+    // convert to yuv
+    Mat yuvMat(cropMat.rows * 3 / 2, cropMat.cols, CV_8UC1);
+    cvtColor(cropMat, yuvMat, code);
+    // write to file
+    string outName = getOutFileName(outPath, file, ".yuv");
+    cout << "outName:" << outName << endl;
+    ofstream outFile(outName, ios::out | ios::ate);
+    if (outFile.is_open()) {
+        int size = yuvMat.rows * yuvMat.cols;
+        outFile.write((char*) yuvMat.data, size);
+        outFile.close();
+    } else {
+        cout << "file open eror" << endl;
+    }
 }
 
+/* Convert jpeg to yuv, only support NV21 and NV12 */
 void jpeg2YuvExtra(cmdline::parser &cmdParser, string file, ColorConversionCodes code)
 {
-    cout << "jpeg2YuvExtra:" << code << endl;
+    // get relative cmd parameters
+    int width = cmdParser.get<int>("width");
+    int height = cmdParser.get<int>("height");
+    int flipType = cmdParser.get<int>("flip");
+    int rotation = cmdParser.get<int>("rotation");
+    string outPath = cmdParser.get<string>("output");
+    // create Mat
+    Mat bgrMat = cv::imread(file, IMREAD_COLOR);
+    // flip and rotate
+    performRotateAndFlip(bgrMat, flipType, rotation);
+    Mat cropMat = bgrMat;
+    // if width and height is set, crop mat base on width and height
+    if (width != 0 && height != 0) {
+        cropMat = bgrMat(cv::Rect(0, 0, width, height));
+    }
+    // convert to yuv
+    Mat yuvMat(cropMat.rows * 3 / 2, cropMat.cols, CV_8UC1);
+    cvtColor(cropMat, yuvMat, code);
+    // convert uuu vvv -> uv uv uv
+    char* convertBuf = new char[yuvMat.rows * yuvMat.cols];
+    convertYV12ToNV21(cropMat.cols, cropMat.rows, (char*) yuvMat.data, convertBuf);
+    // write to file
+    string outName = getOutFileName(outPath, file, ".yuv");
+    cout << "outName:" << outName << endl;
+    ofstream outFile(outName, ios::out | ios::ate);
+    if (outFile.is_open()) {
+        int size = yuvMat.rows * yuvMat.cols;
+        outFile.write(convertBuf, size);
+        outFile.close();
+    } else {
+        cout << "file open eror" << endl;
+    }
+    delete [] convertBuf;
 }
 
 void checkAndProcess(cmdline::parser &cmdParser, string file)
