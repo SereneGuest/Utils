@@ -25,6 +25,7 @@ bool isDir(const char* path)
     stat(path, &inputStat);
     return S_ISDIR(inputStat.st_mode);
 }
+
 /* If path is directory and not end with '/' append '/' */
 void fixDirPath(string &path)
 {
@@ -40,7 +41,6 @@ void getFileList(const char* path, vector<string> &list)
 {
     // is file , just return file name
     if (!isDir(path)) {
-        cout << "path;" << path << endl;
         return list.push_back(path);
     }
     DIR *dir;
