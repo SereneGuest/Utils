@@ -351,7 +351,10 @@ int main(int argc, char** argv)
     // get input file info
     vector<string> fileLists;
     getFileList(cmdParser.get<string>("input").c_str(), fileLists);
-    // check format and start convert
-    checkAndProcess(cmdParser, fileLists[0]);
+    for (vector<string>::const_iterator iter = fileLists.cbegin();
+            iter != fileLists.cend(); iter++) {
+        // check format and start convert
+        checkAndProcess(cmdParser, *iter);
+    }
     return 0;
 }
