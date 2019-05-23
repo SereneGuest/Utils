@@ -4,7 +4,7 @@ include $(CLEAR_VARS)
 
 #OPENCV_INSTALL_MODULES:=off
 # OpenCV-android-sdk path
-OPENCV_ANDROID_SDK := /mnt/e/wsl/OpenCV-android-sdk
+OPENCV_ANDROID_SDK := /mnt/e/linux/OpenCV-android-sdk
 OPENCV_LIB_TYPE := STATIC
 #OPENCV_LIB_TYPE := SHARED
 
@@ -18,8 +18,8 @@ else
   include ../../sdk/native/jni/OpenCV.mk
 endif
 
-LOCAL_SRC_FILES  := cv_util.cpp \
-                    common.c
+LOCAL_SRC_FILES  := cv_util.cpp
+
 LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_LDLIBS     += -llog -ldl
 LOCAL_CFLAGS += -pie -fPIE
