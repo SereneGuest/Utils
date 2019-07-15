@@ -6,7 +6,7 @@
 #include <time.h>
 #include <android/log.h>
 
-#define TAG "tag_wenzhe"
+#define TAG "CVUtil"
 #define MY_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 #define MY_LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
 #define MY_LOGW(...) __android_log_print(ANDROID_LOG_WARN, TAG, __VA_ARGS__)
@@ -15,6 +15,7 @@
 
 #define MAX_FILE_LENGTH 128
 #define MAX_TIME_LENGTH 64
+#define SCALE_SIZE 8
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,6 +39,19 @@ int align(int align, int target);
  */
 void dumpJpeg(int width, int height, int alignSize,
         unsigned char* buffer, const char* path);
+
+/**
+ * Draw watermark in NV21 buffer, watermark load from file.
+ * @param yuv buffer address.
+ * @param width yuv image width.
+ * @param height yuv image heght.
+ * @param stride yuv buffer stride.
+ * @param scanline yuv buffer height.
+ * @param rotation watermark rotate value, clockwise (0, 90, 180, 270).
+ * @param logoPath watermark file path, can be jpeg or png.
+ */
+void generateWatermark(unsigned char* yuvBuf, int width, int height,
+        int stride, int scanline, int rotation, const char* logoPath);
 
 #ifdef __cplusplus
 } // extern C

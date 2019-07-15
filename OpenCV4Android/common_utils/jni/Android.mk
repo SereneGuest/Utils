@@ -22,8 +22,10 @@ LOCAL_SRC_FILES  := cv_util.cpp
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)
 LOCAL_LDLIBS     += -llog -ldl
-LOCAL_CFLAGS += -pie -fPIE
-LOCAL_LDFLAGS += -pie -fPIE
+
+# used in build executable.
+#LOCAL_CFLAGS += -pie -fPIE
+#LOCAL_LDFLAGS += -pie -fPIE
 
 LOCAL_MODULE     := cv_util
 #include $(BUILD_EXECUTABLE)
