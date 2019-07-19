@@ -84,13 +84,12 @@ void generateWatermark(unsigned char* yuvBuf, int width, int height,
     int scaleHeight = height / SCALE_SIZE;
     int scaleWidth = srcMat.cols / (float) srcMat.rows * scaleHeight;
     Mat logoMat(scaleHeight, scaleWidth, srcMat.type());
-    MY_LOGD("start resize watermark");
     resize(srcMat, logoMat, logoMat.size(), 0, 0, INTER_LINEAR);
     int ySize = stride * scanline;
     // perform rotation
     int startPosition, startUvPosition;
     int xOffset, yOffset;
-    MY_LOGD("start rotation watermark w:%d h:%d", logoMat.cols, logoMat.rows);
+    MY_LOGD("rotation watermark w:%d h:%d", logoMat.cols, logoMat.rows);
     switch (rotation) {
         case 90:
             xOffset = scaleWidth / 14;
@@ -121,7 +120,6 @@ void generateWatermark(unsigned char* yuvBuf, int width, int height,
             startUvPosition = ySize + (height - logoMat.rows - yOffset) / 2 * stride + xOffset;
             break;
     }
-    MY_LOGD("start copy watermark pixel");
     // copy data
     int yIndex, uvIndex, i, j;
     uchar value[3] = {0, 0, 0};
@@ -147,7 +145,7 @@ void generateWatermark(unsigned char* yuvBuf, int width, int height,
             }
         }
     }
-    MY_LOGD("end copy watermark pixel");
+    MY_LOGD("watermark generate end");
 }
 
 int main(int argc, char** argv)
