@@ -133,9 +133,9 @@ void generateWatermark(unsigned char* yuvBuf, int width, int height,
             if (pixel[3] == 0) {
                 continue;
             }
-            value[0] = (0.257 * pixel[2]) + (0.504 * pixel[1]) + (0.098 * pixel[0]) + 16 ;
-            value[1] = -(0.148 * pixel[2]) - (0.291 * pixel[1]) + (0.439 * pixel[0]) + 128;
-            value[2] = (0.439 * pixel[2]) - (0.368 * pixel[1]) - (0.071 * pixel[0]) + 128;
+            value[0] = (0.299 * pixel[2]) + (0.587 * pixel[1]) + (0.114 * pixel[0]);
+            value[1] = -(0.147 * pixel[2]) - (0.289 * pixel[1]) + (0.436 * pixel[0]) + 128;
+            value[2] = (0.615 * pixel[2]) - (0.515 * pixel[1]) - (0.1 * pixel[0]) + 128;
             yuvPtr = yuvBuf + yIndex + j;
             *(yuvPtr) = value[0] * pixel[3] / 255 +  (255 - pixel[3]) * (*yuvPtr) / 255;
             if (i % 2 == 0 && j % 2 == 0) {
