@@ -6,12 +6,12 @@
 #include <time.h>
 #include <android/log.h>
 
-#define TAG "CVUtil"
-#define MY_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
-#define MY_LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
-#define MY_LOGW(...) __android_log_print(ANDROID_LOG_WARN, TAG, __VA_ARGS__)
-#define MY_LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
-#define MY_LOGF(...) __android_log_print(ANDROID_LOG_FATAL, TAG, __VA_ARGS__)
+#define CV_TAG "CVUtil"
+#define MY_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, CV_TAG, __VA_ARGS__)
+#define MY_LOGI(...) __android_log_print(ANDROID_LOG_INFO, CV_TAG, __VA_ARGS__)
+#define MY_LOGW(...) __android_log_print(ANDROID_LOG_WARN, CV_TAG, __VA_ARGS__)
+#define MY_LOGE(...) __android_log_print(ANDROID_LOG_ERROR, CV_TAG, __VA_ARGS__)
+#define MY_LOGF(...) __android_log_print(ANDROID_LOG_FATAL, CV_TAG, __VA_ARGS__)
 
 #define MAX_FILE_LENGTH 128
 #define MAX_TIME_LENGTH 64
@@ -35,7 +35,7 @@ void getTimeStr(char* resultTime);
 int align(int align, int target);
 
 /*
- * Must be NV21 YUV format
+ * Must be NV21 YUV format, no align alignSize = 0
  */
 void dumpJpeg(int width, int height, int alignSize,
         unsigned char* buffer, const char* path);

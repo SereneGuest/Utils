@@ -62,8 +62,12 @@ int align(int align, int target) {
 void dumpJpeg(int width, int height, int alignSize,
         unsigned char* buffer, const char* path) {
     MY_LOGD("info %d %d %d %p %s", width, height, alignSize, buffer, path);
-    int realWidth = align(alignSize, width);
-    int realHeight = align(alignSize, height);
+    int realWidth = width;
+    int realHeight = height;
+    if (alignSize > 0) {
+        realWidth = align(alignSize, width);
+        realHeight = align(alignSize, height);
+    }
     Mat yuvMat(realHeight * 3 / 2, realWidth, CV_8UC1, buffer, 0/*AUTO_STEP*/);
     Mat bgrMat(realHeight, realWidth, CV_8UC3);
     //convert color

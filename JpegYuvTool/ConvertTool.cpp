@@ -133,7 +133,7 @@ char* getYuvBuffer(string file)
     cout << "file path:" << file << endl;
     ifstream inputFile(file, ios::in | ios::binary | ios::ate);
     size = inputFile.tellg();
-    cout << "size:" << size << endl;
+    cout << "file size:" << size << endl;
     inputFile.seekg(0, ios::beg);
     char* yuvBuffer = new char[size];
     inputFile.read(yuvBuffer, size);
